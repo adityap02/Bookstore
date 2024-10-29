@@ -1,4 +1,8 @@
 package org.ood.adporwal.bookstore.repository;
 
-public class BookRepository {
+import org.ood.adporwal.bookstore.entity.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<Book, String> {
+
 }

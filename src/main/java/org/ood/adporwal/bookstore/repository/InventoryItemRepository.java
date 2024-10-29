@@ -1,4 +1,16 @@
 package org.ood.adporwal.bookstore.repository;
 
-public class InventoryItemRepository {
+import org.ood.adporwal.bookstore.entity.Book;
+import org.ood.adporwal.bookstore.entity.BookInventory;
+import org.ood.adporwal.bookstore.enums.InventoryItemState;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface InventoryItemRepository extends JpaRepository<BookInventory, String> {
+    List<BookInventory> findByState(InventoryItemState state);
+    List<BookInventory> findByBook(Book book);
 }
+

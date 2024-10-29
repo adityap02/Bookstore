@@ -1,46 +1,26 @@
-package org.ood.adporwal.bookstore.entity;
+package org.ood.adporwal.bookstore.dto;
 
-import jakarta.persistence.*;
 import org.ood.adporwal.bookstore.enums.InventoryItemState;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "book_inventory")
-public class BookInventory{
-    @Id
-    private String id; // RFID
-
-    @ManyToOne
-    @JoinColumn(name = "book_isbn")
-    private Book book;
-
-    @Column(name = "current_price")
+public class InventoryItemDTO {
+    private String id;
+    private String isbn;
     private BigDecimal currentPrice;
-
-    @Column(name = "transaction_count")
     private int transactionCount;
-
-    @Enumerated(EnumType.STRING)
     private InventoryItemState state;
 
     // Constructors, Getters, and Setters
-
-    public void depreciatePrice() {
-        this.currentPrice = this.currentPrice.multiply(BigDecimal.valueOf(0.9));
-        this.transactionCount++;
+    public InventoryItemDTO() {
     }
-
-    public BookInventory() {
-    }
-    public BookInventory(String id, Book book, BigDecimal currentPrice, int transactionCount, InventoryItemState state) {
+    public InventoryItemDTO(String id, String isbn, BigDecimal currentPrice, int transactionCount, InventoryItemState state) {
         this.id = id;
-        this.book = book;
+        this.isbn = isbn;
         this.currentPrice = currentPrice;
         this.transactionCount = transactionCount;
         this.state = state;
     }
-
     public String getId() {
         return id;
     }
@@ -49,12 +29,12 @@ public class BookInventory{
         this.id = id;
     }
 
-    public Book getBook() {
-        return book;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public BigDecimal getCurrentPrice() {
@@ -80,5 +60,6 @@ public class BookInventory{
     public void setState(InventoryItemState state) {
         this.state = state;
     }
-}
 
+
+}
