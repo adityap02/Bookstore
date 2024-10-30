@@ -1,11 +1,9 @@
 package org.ood.adporwal.bookstore.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -19,6 +17,9 @@ public class Book {
 
     @Column(name = "base_price")
     private BigDecimal basePrice;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<InventoryItem> inventoryItems;
 
     // Constructors, Getters, and Setters
 
@@ -61,5 +62,13 @@ public class Book {
 
     public void setBasePrice(BigDecimal basePrice) {
         this.basePrice = basePrice;
+    }
+
+    public List<InventoryItem> getInventoryItems() {
+        return inventoryItems;
+    }
+
+    public void setInventoryItems(List<InventoryItem> inventoryItems) {
+        this.inventoryItems = inventoryItems;
     }
 }

@@ -7,11 +7,11 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "book_inventory")
-public class BookInventory{
+public class InventoryItem {
     @Id
     private String id; // RFID
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_isbn")
     private Book book;
 
@@ -31,9 +31,9 @@ public class BookInventory{
         this.transactionCount++;
     }
 
-    public BookInventory() {
+    public InventoryItem() {
     }
-    public BookInventory(String id, Book book, BigDecimal currentPrice, int transactionCount, InventoryItemState state) {
+    public InventoryItem(String id, Book book, BigDecimal currentPrice, int transactionCount, InventoryItemState state) {
         this.id = id;
         this.book = book;
         this.currentPrice = currentPrice;

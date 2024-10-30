@@ -15,7 +15,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "inventory_item_id")
-    private BookInventory inventoryItem;
+    private InventoryItem inventoryItem;
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
@@ -35,11 +35,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public BookInventory getInventoryItem() {
+    public InventoryItem getInventoryItem() {
         return inventoryItem;
     }
 
-    public void setInventoryItem(BookInventory inventoryItem) {
+    public void setInventoryItem(InventoryItem inventoryItem) {
         this.inventoryItem = inventoryItem;
     }
 
