@@ -26,11 +26,11 @@ public class InventoryItemController {
     }
 
     // POST /api/inventory/buy/{id}
-    @PostMapping("/buy/{id}")
-    public ResponseEntity<?> buyItem(@PathVariable String id) {
+    @PostMapping("/sell/{id}")
+    public ResponseEntity<?> sellItem(@PathVariable String id) {
         try {
-            inventoryItemService.buyItem(id);
-            return ResponseEntity.ok("Purchase successful");
+            inventoryItemService.sellItem(id);
+            return ResponseEntity.ok("Book Sold successfully");
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
@@ -44,6 +44,19 @@ public class InventoryItemController {
         try {
             BigDecimal price = inventoryItemService.buyback(id);
             return ResponseEntity.ok("Buyback successful at price: " + price);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+        catch (InvalidOperationException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @PostMapping("/buy/{isbn}")
+    public ResponseEntity<?> buy(@PathVariable String isbn) {
+        try {
+            BigDecimal price = inventoryItemService.buyNewItem(isbn);
+            return ResponseEntity.ok("Book Successfully Purchased at Price : $" + price);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }

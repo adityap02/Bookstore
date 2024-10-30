@@ -11,6 +11,5 @@ import java.util.List;
 @Repository
 public interface InventoryItemRepository extends JpaRepository<InventoryItem, String> {
     List<InventoryItem> findByState(InventoryItemState state);
-    List<InventoryItem> findByBook(Book book);
 }
 

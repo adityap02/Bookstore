@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface InventoryItemService {
     public List<InventoryItemDTO> getAvailableItems();
-    public void buyItem(String id) throws InvalidOperationException;
+    public void sellItem(String id) throws InvalidOperationException;
     public BigDecimal buyback(String id);
-    public void sellNewItem(String isbn);
+    public BigDecimal buyNewItem(String isbn);
 }

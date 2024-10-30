@@ -18,6 +18,7 @@ public class Transaction {
     private InventoryItem inventoryItem;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type")
     private TransactionType transactionType;
 
     @Column(name = "transaction_date")
@@ -26,6 +27,15 @@ public class Transaction {
     private BigDecimal price;
 
     // Constructors, Getters, and Setters
+
+    public Transaction() {
+    }
+    public Transaction(InventoryItem inventoryItem, TransactionType transactionType, LocalDateTime transactionDate, BigDecimal price) {
+        this.inventoryItem = inventoryItem;
+        this.transactionType = transactionType;
+        this.transactionDate = transactionDate;
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
