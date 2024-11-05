@@ -1,5 +1,4 @@
 package org.ood.adporwal.bookstore.controller;
-
 import org.ood.adporwal.bookstore.dto.InventoryItemDTO;
 import org.ood.adporwal.bookstore.exceptions.InvalidOperationException;
 import org.ood.adporwal.bookstore.exceptions.ResourceNotFoundException;
@@ -65,7 +64,4 @@ public class InventoryItemController {
         }
     }
 
-
-
-    // Additional endpoints
 }

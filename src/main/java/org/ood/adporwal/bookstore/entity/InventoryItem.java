@@ -1,12 +1,15 @@
 package org.ood.adporwal.bookstore.entity;
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.ood.adporwal.bookstore.enums.InventoryItemState;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "book_inventory")
+@Getter
+@Setter
 public class InventoryItem {
     @Id
     private String id; // RFID
@@ -38,46 +41,6 @@ public class InventoryItem {
         this.book = book;
         this.currentPrice = currentPrice;
         this.transactionCount = transactionCount;
-        this.state = state;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public BigDecimal getCurrentPrice() {
-        return currentPrice;
-    }
-
-    public void setCurrentPrice(BigDecimal currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
-    public int getTransactionCount() {
-        return transactionCount;
-    }
-
-    public void setTransactionCount(int transactionCount) {
-        this.transactionCount = transactionCount;
-    }
-
-    public InventoryItemState getState() {
-        return state;
-    }
-
-    public void setState(InventoryItemState state) {
         this.state = state;
     }
 }

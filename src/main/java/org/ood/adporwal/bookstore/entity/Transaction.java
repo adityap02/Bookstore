@@ -1,12 +1,16 @@
 package org.ood.adporwal.bookstore.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.ood.adporwal.bookstore.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "transactions")
 public class Transaction {
     @Id
