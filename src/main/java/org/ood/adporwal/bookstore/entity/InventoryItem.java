@@ -2,6 +2,7 @@ package org.ood.adporwal.bookstore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.ood.adporwal.bookstore.enums.Constants;
 import org.ood.adporwal.bookstore.enums.InventoryItemState;
 
 import java.math.BigDecimal;
@@ -27,10 +28,9 @@ public class InventoryItem {
     @Enumerated(EnumType.STRING)
     private InventoryItemState state;
 
-    // Constructors, Getters, and Setters
 
     public void depreciatePrice() {
-        this.currentPrice = this.currentPrice.multiply(BigDecimal.valueOf(0.9));
+        this.currentPrice = this.currentPrice.multiply(BigDecimal.valueOf(1).subtract(Constants.DEPRECIATION_RATE));
         this.transactionCount++;
     }
 

@@ -1,8 +1,11 @@
 package org.ood.adporwal.bookstore.services;
 import jakarta.transaction.Transactional;
 import org.ood.adporwal.bookstore.dto.InventoryItemDTO;
+import org.ood.adporwal.bookstore.dto.ResponseDTO;
 import org.ood.adporwal.bookstore.entity.Book;
 import org.ood.adporwal.bookstore.entity.InventoryItem;
+import org.ood.adporwal.bookstore.entity.Transaction;
+import org.ood.adporwal.bookstore.enums.Constants;
 import org.ood.adporwal.bookstore.enums.InventoryItemState;
 import org.ood.adporwal.bookstore.enums.TransactionType;
 import org.ood.adporwal.bookstore.exceptions.InvalidOperationException;
@@ -13,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,7 +29,7 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
     @Autowired
     private InventoryItemRepository inventoryItemRepository;
 
-    @Qualifier("bookDetailsFactoryFromLibrary")
+    @Qualifier(Constants.BOOK_DETAIL_SOURCE)
     @Autowired
     private BookDetailsFactory bookDetailsFactory;
 
@@ -36,7 +39,7 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
     @Override
     public List<InventoryItemDTO> getAvailableItems() {
         List<InventoryItem> availableItems = inventoryItemRepository.findByState(InventoryItemState.AVAILABLE);
-        logger.info("Available Books Found: " + availableItems.size());
+        logger.info(Constants.LOGGER_BOOK_FOUND + availableItems.size());
         return availableItems.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -53,7 +56,7 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
     }
 
     @Transactional
-    public void sellItem(String id) throws InvalidOperationException, ResourceNotFoundException {
+    public ResponseDTO sellItem(String id) throws InvalidOperationException, ResourceNotFoundException {
 
             InventoryItem item = inventoryItemRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Invalid Inventory ID: " + id));
@@ -67,14 +70,15 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
             inventoryItemRepository.save(item);
             logger.info("Book ID : " + item.getId() +" Sold Successfully");
             logger.debug("Book ID : " + item.getId() +" saved Successfully");
-            transactionServiceImpl.recordTransaction(item, TransactionType.SELL);
+            Transaction transaction = transactionServiceImpl.recordTransaction(item, TransactionType.SELL);
             logger.debug("Transaction Recorded for Book ID: " + item.getId());
 
+            return new ResponseDTO(item.getId(), Constants.SUCCESS, "Book Sold Successfully", item.getCurrentPrice(),transaction.getId().toString() );
 
     }
     //Buyback item
     @Transactional
-    public BigDecimal buyback(String id) throws InvalidOperationException, ResourceNotFoundException {
+    public ResponseDTO buyback(String id) throws InvalidOperationException, ResourceNotFoundException {
 
         InventoryItem item = inventoryItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid ID Provided: " + id));
@@ -87,21 +91,18 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
         // Depreciate price by 10%
         item.depreciatePrice();
 
-        // Save changes
         inventoryItemRepository.save(item);
-        transactionServiceImpl.recordTransaction(item, TransactionType.BUYBACK);
-        return item.getCurrentPrice();
+        Transaction transaction = transactionServiceImpl.recordTransaction(item, TransactionType.BUYBACK);
+        return new ResponseDTO(item.getId(), Constants.SUCCESS, "Book Buyback Successful", item.getCurrentPrice(), transaction.getId().toString());
     }
 
     @Transactional
-    public BigDecimal buyNewItem(String isbn) throws ResourceNotFoundException {
+    public ResponseDTO buyNewItem(String isbn) throws ResourceNotFoundException {
         Book book = bookDetailsFactory.getDetails(isbn);
-        String bookId = UUID.randomUUID().toString().substring(0, 9);
+        String bookId = UUID.randomUUID().toString().substring(0, 11);
         InventoryItem item = new InventoryItem(bookId, book, book.getBasePrice(), 0, InventoryItemState.AVAILABLE);
         inventoryItemRepository.save(item);
-        transactionServiceImpl.recordTransaction(item, TransactionType.PURCHASE);
-        return item.getCurrentPrice();
+        Transaction transaction = transactionServiceImpl.recordTransaction(item, TransactionType.PURCHASE);
+        return new ResponseDTO(bookId, Constants.SUCCESS, "Book Purchased Successfully", book.getBasePrice(), transaction.getId().toString());
     }
-
-
 }

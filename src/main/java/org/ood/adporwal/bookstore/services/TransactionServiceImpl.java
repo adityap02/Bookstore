@@ -16,7 +16,7 @@ public class TransactionServiceImpl {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public void recordTransaction(InventoryItem item,TransactionType transactionType){
-        transactionRepository.save(new Transaction(item, transactionType, getTimestamp.getCurrentTime() , item.getCurrentPrice()));
+    public Transaction recordTransaction(InventoryItem item,TransactionType transactionType){
+        return transactionRepository.save(new Transaction(item, transactionType, getTimestamp.getCurrentTime() , item.getCurrentPrice()));
     }
 }

@@ -1,14 +1,14 @@
 package org.ood.adporwal.bookstore.services;
 
 import org.ood.adporwal.bookstore.dto.InventoryItemDTO;
+import org.ood.adporwal.bookstore.dto.ResponseDTO;
 import org.ood.adporwal.bookstore.exceptions.InvalidOperationException;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface InventoryItemService {
     public List<InventoryItemDTO> getAvailableItems();
-    public void sellItem(String id) throws InvalidOperationException;
-    public BigDecimal buyback(String id);
-    public BigDecimal buyNewItem(String isbn);
+    public ResponseDTO sellItem(String id) throws InvalidOperationException;
+    public ResponseDTO buyback(String id);
+    public ResponseDTO buyNewItem(String isbn);
 }
