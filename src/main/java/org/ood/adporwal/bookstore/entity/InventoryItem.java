@@ -1,6 +1,8 @@
 package org.ood.adporwal.bookstore.entity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ood.adporwal.bookstore.enums.Constants;
 import org.ood.adporwal.bookstore.enums.InventoryItemState;
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
 @Table(name = "book_inventory")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class InventoryItem {
     @Id
     private String id; // RFID
@@ -29,19 +33,9 @@ public class InventoryItem {
     private InventoryItemState state;
 
 
-    public void depreciatePrice() {
-        this.currentPrice = this.currentPrice.multiply(BigDecimal.valueOf(1).subtract(Constants.DEPRECIATION_RATE));
+    public void depreciatePrice(BigDecimal depreciationRate) {
+        this.currentPrice = this.currentPrice.multiply(BigDecimal.valueOf(1).subtract(depreciationRate));
         this.transactionCount++;
-    }
-
-    public InventoryItem() {
-    }
-    public InventoryItem(String id, Book book, BigDecimal currentPrice, int transactionCount, InventoryItemState state) {
-        this.id = id;
-        this.book = book;
-        this.currentPrice = currentPrice;
-        this.transactionCount = transactionCount;
-        this.state = state;
     }
 }
 

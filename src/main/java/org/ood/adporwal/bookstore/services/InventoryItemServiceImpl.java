@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.ood.adporwal.bookstore.enums.Constants.BOOK_DETAIL_LIBRARY;
+
 @Service
 public class InventoryItemServiceImpl  implements InventoryItemService {
 
@@ -29,12 +31,15 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
     @Autowired
     private InventoryItemRepository inventoryItemRepository;
 
-    @Qualifier(Constants.BOOK_DETAIL_SOURCE)
-    @Autowired
-    private BookDetailsFactory bookDetailsFactory;
-
     @Autowired
     private TransactionServiceImpl transactionServiceImpl;
+
+    @Autowired
+    BookDetailsFactory bookDetailsFactory;
+
+    @Qualifier("constantDepreciation")
+    @Autowired
+    DepreciationStrategy depreciationStrategy;
 
     @Override
     public List<InventoryItemDTO> getAvailableItems() {
@@ -88,8 +93,7 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
         }
         item.setState(item.getState().transition());
 
-        // Depreciate price by 10%
-        item.depreciatePrice();
+        item.depreciatePrice(depreciationStrategy.depreciateValue());
 
         inventoryItemRepository.save(item);
         Transaction transaction = transactionServiceImpl.recordTransaction(item, TransactionType.BUYBACK);
@@ -98,7 +102,14 @@ public class InventoryItemServiceImpl  implements InventoryItemService {
 
     @Transactional
     public ResponseDTO buyNewItem(String isbn) throws ResourceNotFoundException {
-        Book book = bookDetailsFactory.getDetails(isbn);
+        BookDetails bookDetailsSource = bookDetailsFactory.getBookDetails(BOOK_DETAIL_LIBRARY);
+        if(bookDetailsSource == null) {
+            throw new ResourceNotFoundException("Book Details resource not found");
+        }
+        Book book = bookDetailsSource.getDetails(isbn);
+        if (book == null) {
+            throw new ResourceNotFoundException("Book not found with ISBN: " + isbn);
+        }
         String bookId = UUID.randomUUID().toString().substring(0, 11);
         InventoryItem item = new InventoryItem(bookId, book, book.getBasePrice(), 0, InventoryItemState.AVAILABLE);
         inventoryItemRepository.save(item);

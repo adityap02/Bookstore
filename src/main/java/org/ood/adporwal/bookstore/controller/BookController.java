@@ -15,9 +15,4 @@ public class BookController {
 
     @Autowired
     private BookServiceImpl bookService;
-
-    // GET /api/books
-
-
-    // Additional endpoints
 }

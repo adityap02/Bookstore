@@ -9,7 +9,8 @@ public class Constants {
 
     public static final BigDecimal DEPRECIATION_RATE = new BigDecimal("0.1");
 
-    public static final String BOOK_DETAIL_SOURCE = "bookDetailsFactoryFromLibrary";
+    public static final String BOOK_DETAIL_LIBRARY = "library";
+    public static final String BOOK_DETAIL_API = "API";
 
     //Logger_Messages
     public static final String LOGGER_BOOK_FOUND = "Available Books Found:";

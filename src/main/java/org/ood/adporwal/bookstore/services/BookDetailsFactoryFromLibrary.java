@@ -3,10 +3,11 @@ package org.ood.adporwal.bookstore.services;
 import org.ood.adporwal.bookstore.entity.Book;
 import org.ood.adporwal.bookstore.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
-public class BookDetailsFactoryFromLibrary implements BookDetailsFactory {
+@Component
+public class BookDetailsFactoryFromLibrary implements BookDetails {
 
     @Autowired
     private BookServiceImpl bookServiceImpl;
